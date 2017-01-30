@@ -12,12 +12,36 @@
 
 @implementation TLYShyViewController (AsParent)
 
+- (UIView *)closestCommonSuperviewForView:(UIView *)view1 andView:(UIView *)view2
+{
+    UIView *superview1 = view1;
+    while (superview1 != nil) {
+        UIView *superview2 = view2;
+        while (superview2 != nil) {
+            if (superview1 == superview2) {
+                return superview1;
+            }
+            superview2 = superview2.superview;
+        }
+        superview1 = superview1.superview;
+    }
+    return nil;
+}
+
 - (CGFloat)maxYRelativeToView:(UIView *)superview
 {
-    CGPoint maxEdge = CGPointMake(0, CGRectGetHeight(self.view.bounds));
-    CGPoint normalizedMaxEdge = [superview convertPoint:maxEdge fromView:self.view];
+    UIView *commonSuperview = [self closestCommonSuperviewForView:self.view andView:superview];
     
-    return normalizedMaxEdge.y;
+    CGFloat maxY;
+    if (commonSuperview) {
+        CGPoint maxEdge = CGPointMake(0, CGRectGetHeight(self.view.bounds));
+        CGPoint normalizedMaxEdge = [superview convertPoint:maxEdge fromView:self.view];
+        maxY = normalizedMaxEdge.y;
+    } else {
+        maxY = CGRectGetMaxX(self.view.frame);
+    }
+    
+    return maxY;
 }
 
 - (CGFloat)calculateTotalHeightRecursively
