@@ -38,7 +38,7 @@
         CGPoint normalizedMaxEdge = [superview convertPoint:maxEdge fromView:self.view];
         maxY = normalizedMaxEdge.y;
     } else {
-        maxY = CGRectGetMaxX(self.view.frame);
+        maxY = CGRectGetMaxY(self.view.frame);
     }
     
     return maxY;
